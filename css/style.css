@@ -1,0 +1,238 @@
+/*--------------------------------------------------------------------------
+   
+
+	Typegrid
+
+	0. YUI Library is used for CSS reset (http://yuilibrary.com/yui/docs/cssreset/)
+	1. Body
+	2. Typography
+	3. Page Sections
+		3.1. Topbar
+		3.2. Intro
+		3.3. Resume
+		3.4. Works
+			3.4.1 jQuery Reveal Plugin
+		3.5. Contact / References / Testimonials
+		3.6. Footer
+
+
+--------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------
+	1. Body
+--------------------------------------------------------------------------*/
+
+html {
+}
+
+body {
+	color: #333;
+	font: 14px/24px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
+	-webkit-text-size-adjust: 100%;
+}
+
+
+
+
+/*--------------------------------------------------------------------------
+	2. Typography
+--------------------------------------------------------------------------*/
+
+/* Links */
+a, a:visited { color: #333; text-decoration: none; underline; outline: 0; }
+a:hover, a:focus { color: #000; }
+p a, p a:visited { line-height: inherit; }
+
+
+/* Highlighted Text */
+::selection { 
+	background: #cc77bb; 
+	color:#fff; 
+	text-shadow: none; 
+}
+
+/* Firefox */
+::-moz-selection { 
+	background: #cc77bb; 
+	color:#fff; 
+	text-shadow: none; 
+}
+
+em, .italic { font-style: italic; }
+strong { font-weight: bold; }
+small { font-size: 80%; }
+
+.font-color-primary {
+	color: #cc77bb;
+}
+
+.font-color-gray {
+	color: #bbb;
+}
+
+.font-color-black {
+	color: #111;
+}
+
+
+
+
+/*--------------------------------------------------------------------------
+	3. Page Sections
+--------------------------------------------------------------------------*/
+
+/* Common Elements */
+img {
+	max-width: 100%;
+}
+
+	/*---------------------------------------------------
+		3.2 Header
+	---------------------------------------------------*/
+
+	#section-header {
+		padding: 50px 0;
+	}
+
+		#section-header h1 {
+			font: bold 24px/32px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		}
+		
+			#section-header h1 a {
+				color: #111; 
+			}
+
+		p.tagline {
+			font: bold 46px/60px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		}
+
+
+		@media only screen and (min-width: 1240px) {
+			p.tagline {
+				font: bold 50px/64px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+				margin-right: 60px;
+			}
+		}
+
+		@media only screen and (max-width: 767px) { 
+			#section-header {
+				padding-bottom: 20px;
+			}
+
+			p.tagline {
+				font: bold 22px/36px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+			}
+		}
+		
+	ul.mainmenu {
+		font: normal 14px/23px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	}
+	
+		ul.mainmenu li {
+			display: inline-block;
+			float: left;
+			margin-right: 50px;
+		}
+		
+			ul.mainmenu li a {
+				display: block;
+				padding: 5px 0;
+			}
+
+
+	/*---------------------------------------------------
+		3.3 Works
+	---------------------------------------------------*/
+
+	#section-works {
+	}
+
+		#section-works h2 {
+			color: #444;
+			font: bold 12px/23px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+			text-transform: uppercase;
+		}
+
+		#section-works .item {
+			margin-bottom: 40px; 
+		}
+
+		#section-works .item h3 {
+			display: block;
+			color: #555;
+			font: normal 11px/20px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+			letter-spacing: 3px;
+			text-transform: uppercase;
+		}
+
+			#section-works .item a:hover h3 {
+				color: #222;
+			}
+			
+		#section-works .item p {
+			color: #ccc; 
+			font: normal 12px/23px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+			padding: 15px 25px;
+		}
+
+			#section-works .item a:hover p {
+				color: #555;
+			}
+
+			@media only screen and (max-width: 767px) { 
+				#section-works .item {
+					margin-top: 50px;
+				}
+			}
+
+
+	/*---------------------------------------------------
+		3.6 Footer
+	---------------------------------------------------*/
+
+	#section-footer {
+		font: normal 13px/23px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		margin-top: 60px;
+	}
+
+		#section-footer p {
+			margin-top: 32px;
+		}
+
+		#section-footer a { color: #fff; }
+
+		#section-footer a:hover { color: #cc77bb; }
+
+
+		#section-footer ul#social {
+			float: right;
+		}
+
+		#section-footer ul#social li {
+			display: inline-block;
+			float: left;
+		}
+
+		#section-footer ul#social li a {
+			display: block;
+			line-height: 0;
+			padding: 30px;
+		}
+
+		@media only screen and (max-width: 767px) {
+			#section-footer ul#social li a {
+				background: #cc77bb;
+			}
+		}
+
+		#section-footer ul#social li a:hover {
+			background: #cc77bb;
+		}
+
+			@media only screen and (max-width: 767px) { 
+				#section-footer ul#social {
+					float: none;
+					margin-top: 60px;
+				}
+			}
