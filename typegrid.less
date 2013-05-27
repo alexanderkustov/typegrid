@@ -1,0 +1,459 @@
+/*--------------------------------------------------------------------------
+   
+
+  Typegrid Beta 1.0
+
+
+--------------------------------------------------------------------------*/
+
+
+//==========================================================================
+//==========================================================================
+//
+//		++ Typegrid Overview
+//		
+//		Instead of generating different grid system every time
+//		designing a new website, Typegrid allows you to automatically
+//		generate a responsive grid system powered by less.js.
+//
+//
+//
+//		++ Github Repository
+//
+//		https://github.com/subwaymatch/typegrid
+//
+//
+//
+//		++ How is this differnent from Twitter Bootstrap & Zurb Foundation?
+//
+//		Instead of using a fluid container width, 
+//		Typegrid uses fixed width sets for each viewport.
+//		This allows designers to have a pixel-perfect control.
+//
+//
+//
+//		++ How do I use it?
+//
+//		It's extremely simple to use Typegrid, 
+//		even if you don't know a single line of Javascript.
+//		Change the variables in "A. Grid Configuration".
+//
+//
+//
+//		++ What's Typegrid's unique benefits?
+//
+//		1. Typegrid has one and only purpose - to provide a grid structure.
+//		No reset, no default stylings, no nothing. Just the structure.
+//		It's extremely lightweight, yet powerful.
+//		
+//		2. Typegrid handles grid generation in the smartest way possible. 
+//		Note that you don't need to worry about adding breakpoints. 
+//		Typegrid allows you to have 5 maximum viewports.
+//		- mobile portrait [320px wide]
+//		- mobile landscape [480px wide], 
+//		- tablet portrait [768px wide],
+//		- desktop [varies],
+//		- widescreen [varies]
+//
+//		3. Typegrid has little dependency.
+//		All you need is Javascript, with less.js (any version later than 1.4.0).
+//		Even loops are handled by less.js, not by other languages. 
+//
+//		4. Best of all, you get to change the grid configuration during
+//		development (even the number of columns)!		
+//
+//
+//==========================================================================
+//==========================================================================
+
+
+/*--------------------------------------------------------------------------
+	1. Grid System
+--------------------------------------------------------------------------*/
+
+// \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
+//
+//		A. Grid Configuration
+//
+//		-
+//		Change this part. 
+//
+// \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
+
+// Desktop - Default
+@column-width: 69; // Column width (in pixels)
+@columns: 12; // Number of columns
+@gutter-width: 1; // Gutter (in pixels)
+
+@container-class: container; // Class name of the container
+
+// Columns
+@column-width-widescreen: 0; // Column width in widescreen - won't generate widescreen grids if this vaulue is smaller than the desktop (default) column width
+@column-width-mobile-landscape: 400; // Column width in mobile landscape
+@column-width-mobile-portrait: 280; // Column width in mobile portrait
+
+@columns-mobile-landscape: 4; // Number of mobile (landscape) columns
+@columns-mobile-portrait: 2; // Number of mobile (portrait) columns
+
+
+
+// \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
+//
+//		B. Grid Configuration
+//
+//		-
+//		Change this part only if you are designing for a special viewport
+//
+// \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
+
+// Media query breakpoints
+// Widescreen is automatically calculated using @column-width-widescreen below
+@breakpoint-desktop: 960;
+@breakpoint-tablet: 768;
+@breakpoint-mobile-landscape: 480;
+@breakpoint-mobile-portrait: 320;
+
+
+
+
+// \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
+//
+//		C. Generate Grid
+//
+//		-
+//		No need to change the parts below
+//
+// \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
+
+// Calculate left/right gutters (margins)
+// math functions floor() and ceil() used to round numbers up and down in case of an odd gutter width
+@gutter-left: unit( floor( @gutter-width / 2 ), px );
+@gutter-right: unit( ceil( @gutter-width / 2 ), px );
+
+// Calculate container width
+@container-width: unit( ( ( @column-width * @columns ) + ( @gutter-width * @columns ) ), px );
+@container-width-widescreen: unit( ( ( @column-width-widescreen * @columns ) + ( @gutter-width * @columns ) ), px );
+@container-width-tablet: unit( ( ( @column-width-tablet * @columns ) + ( @gutter-width * @columns ) ), px );
+@container-width-mobile-landscape: unit( ( @breakpoint-mobile-landscape - 80 ), px );
+@container-width-mobile-portrait: unit( ( @breakpoint-mobile-portrait - 40 ), px );
+
+// Convert breakpoints to pixels
+@enterpoint-widescreen: unit( ( ( @column-width-widescreen * @columns ) + ( @gutter-width * @columns ) + 260 ), px );
+@enterpoint-tablet: unit( @breakpoint-tablet, px );
+@enterpoint-mobile-landscape: unit( @breakpoint-mobile-landscape, px );
+@enterpoint-mobile-portrait: unit( @breakpoint-mobile-portrait, px );
+
+// Take off a pixel from each enterpoint to find "exit points"
+@exitpoint-tablet: unit( ( @breakpoint-tablet - 1 ), px );
+@exitpoint-mobile-landscape: unit( ( @breakpoint-mobile-landscape - 1 ), px );
+@exitpoint-mobile-portrait: unit( ( @breakpoint-mobile-portrait - 1 ), px );
+
+// Exitpoint check for the desktop viewport in case the container size is larger than the designated breakpoint
+.desktopContainerCheck1() when ( @container-width > @breakpoint-desktop ) {
+	@exitpoint-desktop: @container-width - 1; 
+}
+
+.desktopContainerCheck1();
+
+.desktopContainerCheck2() when ( @container-width =< @breakpoint-desktop ) {
+	@exitpoint-desktop: unit( ( @breakpoint-desktop - 1 ), px );
+}
+
+.desktopContainerCheck2();
+
+// Calculate tablet column width
+@column-width-tablet: floor( ( @breakpoint-tablet - ( @gutter-width * @columns ) - 100 ) / @columns ); 
+
+// Media Query Variables
+@widescreen: ~"screen and (min-width: @{enterpoint-widescreen})";
+@tablet: ~"screen and (min-width: @{enterpoint-tablet}) and (max-width: @{exitpoint-desktop})";
+@mobile: ~"screen and (max-width: @{exitpoint-tablet})";
+@mobile-landscape: ~"screen and (min-width: @{enterpoint-mobile-landscape}) and (max-width: @{exitpoint-tablet})";
+
+
+
+.border-box() {
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+
+
+// Default grid
+.desktop() {
+
+	/* Container */
+	.@{container-class} {
+		width: @container-width; 
+		margin: 0 auto;
+		
+		/* Columns */
+		.column,
+		.columns { 
+			float: left; 
+			display: inline; 
+			padding-left: @gutter-left; 
+			padding-right: @gutter-right; 
+			
+			.border-box(); 
+
+			&.nested {
+				padding-left: 0;
+				padding-right: 0; 
+			}
+		} // .column, .columns
+	} // .container
+
+
+
+	// Desktop
+	.loopDesktop(@index) when ( @index =< @columns ) {
+
+		// Concatenate "desktop-" with column number
+		.desktop-@{index} {
+			width: unit( (@column-width * @index) + (@gutter-width * @index ), px );
+		}
+
+		// Next iteration
+		.loopDesktop(@index + 1);
+	}
+
+
+
+	// Offset (Push)
+	.loopDesktopOffset(@index) when ( @index =< @columns - 1 ) {
+		
+		.offset-@{index} {
+			margin-left: unit( ( (@column-width * @index) + ( @gutter-width * @index ) ) ,px );
+		}
+
+		.loopDesktopOffset(@index + 1);
+	}
+	
+	.loopDesktop(1);
+	.loopDesktopOffset(1);
+
+} // .desktkop()
+
+
+
+
+
+
+// Widescreen
+.widescreen() when ( @column-width-widescreen > @column-width ) {
+
+	// Desktop
+	.loopWidescreen(@index) when ( @index =< @columns ) {
+
+		// Concatenate "desktop-" with column number
+		.desktop-@{index} {
+			width: unit( (@column-width-widescreen * @index) + (@gutter-width * @index ), px );
+		}
+
+		// Next iteration
+		.loopWidescreen(@index + 1);
+	}
+
+
+
+	// Offset (Push)
+	.loopWidescreenOffset(@index) when ( @index =< @columns - 1 ) {
+		
+		.offset-@{index} {
+			margin-left: unit( ( (@column-width-widescreen * @index) + ( @gutter-width * @index ) ) ,px );
+		}
+
+		.loopWidescreenOffset(@index + 1);
+	}
+
+
+
+	/* Widescreen */
+	@media @widescreen {
+		// Container, columns
+		.@{container-class} {
+			width: @container-width-widescreen; 
+		} // .container
+		
+		.loopWidescreen(1);
+		.loopWidescreenOffset(1); 
+	} // @media @widescreen
+
+} // .widescreen()
+
+
+
+
+
+
+.tablet() when ( @container-width > @breakpoint-tablet ) {
+
+	// Tablet
+	.loopTablet(@index) when ( @index =< @columns ) {
+
+		// Concatenate "grid-" and column number
+		.desktop-@{index} {
+			width: unit( (@column-width-tablet * @index) + (@gutter-width * (@index) ), px );
+		}
+
+		// Next iteration
+		.loopTablet(@index + 1);
+	}
+
+
+
+	// Tablet specific
+	// These will override the original "desktop-" width in tablet viewport
+	.loopTabletOverride(@index) when ( @index =< @columns ) {
+
+		// Concatenate "grid-" and column number
+		.tablet-@{index} {
+			width: unit( (@column-width-tablet * @index) + (@gutter-width * (@index) ), px );
+		}
+
+		// Next iteration
+		.loopTabletOverride(@index + 1);
+	}
+
+
+
+	// Offset (Push)
+	.loopTabletOffset(@index) when ( @index =< @columns - 1 ) {
+		
+		.offset-@{index} {
+			margin-left: unit( ( (@column-width-tablet * @index) + ( @gutter-width * @index ) ) ,px );
+		}
+
+		.loopTabletOffset(@index + 1);
+	}
+	
+
+
+	// Tablet specific
+	.loopTabletOffsetOverride(@index) when ( @index =< @columns - 1 ) {
+		
+		.offset-tablet-@{index} {
+			margin-left: unit( ( (@column-width-tablet * @index) + ( @gutter-width * @index ) ) ,px );
+		}
+
+		.loopTabletOffsetOverride(@index + 1);
+	}
+
+
+
+	/* Tablet */
+	@media @tablet {
+		// Container, columns
+		.@{container-class} {
+			width: @container-width-tablet; 
+		} // .container
+
+		.loopTablet(1); 
+		.loopTabletOverride(1); 
+		.loopTabletOffset(1);
+		.loopTabletOffsetOverride(1);
+	} // @media @tablet
+
+} // .tablet()
+
+
+
+
+
+
+.mobile() when ( @container-width > @breakpoint-mobile-landscape ) {
+
+	// Mobile - Portrait
+	.loopMobile(@index) when ( @index =< @columns ) {
+
+		// Concatenate
+		.desktop-@{index},
+		.tablet-@{index} { 
+			width:  @container-width-mobile-portrait; 
+		} // .desktop-, .tablet-
+
+		// Next iteration
+		.loopMobile(@index + 1);
+	} // .loopMobile()
+
+
+
+	// Mobile - Portrait
+	.loopMobileOverride(@index) when ( @index =< @columns-mobile-portrait ) {
+
+		// Concatenate
+		.mobile-@{index} { 
+			width: 100px; 
+		} // .desktop-, .tablet-
+
+		// Next iteration
+		.loopMobileOverride(@index + 1);
+	} // .loopMobileOverride()
+	
+
+
+	// Offset (Push)
+	.loopMobileOffset(@index) when ( @index =< @columns - 1 ) {
+		
+		.offset-@{index} {
+			margin-left: 0;
+		}
+
+		.loopMobileOffset(@index + 1);
+	} // .loopMobileOffset()
+	
+
+
+	/* Mobile - Portrait */
+	@media @mobile {
+		// Container, columns
+		.@{container-class} {
+			width: @container-width-mobile-portrait; 
+		} // .container
+		
+		.loopMobile(1); 
+		.loopMobileOverride(1); 
+		.loopMobileOffset(1);
+	} // @media @mobile
+
+} // .mobile()
+
+
+
+
+.mobileLandscape() when ( @container-width > @breakpoint-mobile-landscape ) {
+
+	// Mobile - Landscape
+	.loopMobileLandscape(@index) when ( @index =< @columns ) {
+
+		// Concatenate "grid-" and column number
+		.desktop-@{index},
+		.tablet-@{index} { 
+			width: @container-width-mobile-landscape; 
+		} // .desktop-, .tablet-
+
+		// Next iteration
+		.loopMobileLandscape(@index + 1);
+	}
+	
+	/* Mobile - Landscape */
+	@media @mobile-landscape {
+		// Container, columns
+		.@{container-class} {
+			width: @container-width-mobile-landscape; 
+		} // .containerop
+		
+		.loopMobileLandscape(1); 
+	} // @media @mobile
+
+} // .mobileLandscape()
+
+
+// Run mixins
+.desktop(); 
+.widescreen(); 
+.tablet(); 
+.mobile(); 
+.mobileLandscape(); 
