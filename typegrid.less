@@ -1,20 +1,11 @@
-/*--------------------------------------------------------------------------
-   
-
-  Typegrid Beta 1.0
-
-
---------------------------------------------------------------------------*/
-
-
 //==========================================================================
 //==========================================================================
 //
 //		++ Typegrid Overview
 //		
 //		Instead of generating different grid system every time
-//		designing a new website, Typegrid allows you to automatically
-//		generate a responsive grid system powered by less.js.
+//		designing a new website, Typegrid allows you to generate and modify
+//		responsive grid sets on-the-go, powered by less.js.
 //
 //
 //
@@ -24,7 +15,7 @@
 //
 //
 //
-//		++ How is this differnent from Twitter Bootstrap & Zurb Foundation?
+//		++ How is this different from Twitter Bootstrap & Zurb Foundation?
 //
 //		Instead of using a fluid container width, 
 //		Typegrid uses fixed width sets for each viewport.
@@ -44,10 +35,11 @@
 //
 //		1. Typegrid has one and only purpose - to provide a grid structure.
 //		No reset, no default stylings, no nothing. Just the structure.
-//		It's extremely lightweight, yet powerful.
+//		It's extremely lightweight yet agile and powerful.
 //		
 //		2. Typegrid handles grid generation in the smartest way possible. 
-//		Note that you don't need to worry about adding breakpoints. 
+//		Everything after a few configurations are automated through less.js.
+//		Note that you also don't need to worry about adding breakpoints. 
 //		Typegrid allows you to have 5 maximum viewports.
 //		- mobile portrait [320px wide]
 //		- mobile landscape [480px wide], 
@@ -56,12 +48,11 @@
 //		- widescreen [varies]
 //
 //		3. Typegrid has little dependency.
-//		All you need is Javascript, with less.js (any version later than 1.4.0).
+//		All you need is less.js (any version later than 1.4.0 beta).
 //		Even loops are handled by less.js, not by other languages. 
 //
 //		4. Best of all, you get to change the grid configuration during
-//		development (even the number of columns)!		
-//
+//		development (including the number of columns)!		
 //
 //==========================================================================
 //==========================================================================
@@ -81,19 +72,12 @@
 // \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
 
 // Desktop - Default
-@column-width: 69; // Column width (in pixels)
+@column-width: 40; // Column width (in pixels)
 @columns: 12; // Number of columns
-@gutter-width: 1; // Gutter (in pixels)
-
-@container-class: container; // Class name of the container
+@gutter-width: 40; // Gutter (in pixels)
 
 // Columns
-@column-width-widescreen: 0; // Column width in widescreen - won't generate widescreen grids if this vaulue is smaller than the desktop (default) column width
-@column-width-mobile-landscape: 400; // Column width in mobile landscape
-@column-width-mobile-portrait: 280; // Column width in mobile portrait
-
-@columns-mobile-landscape: 4; // Number of mobile (landscape) columns
-@columns-mobile-portrait: 2; // Number of mobile (portrait) columns
+@column-width-widescreen: 60; // Column width in widescreen - won't generate widescreen grids if this vaulue is smaller than the desktop (default) column width
 
 
 
@@ -106,12 +90,21 @@
 //
 // \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ 
 
+@container-class: container; // Class name of the container
+
 // Media query breakpoints
 // Widescreen is automatically calculated using @column-width-widescreen below
 @breakpoint-desktop: 960;
 @breakpoint-tablet: 768;
 @breakpoint-mobile-landscape: 480;
 @breakpoint-mobile-portrait: 320;
+
+// Mobile
+@column-width-mobile-landscape: 400; // Column width in mobile landscape
+@column-width-mobile-portrait: 280; // Column width in mobile portrait
+
+@columns-mobile-landscape: 4; // Number of mobile (landscape) columns
+@columns-mobile-portrait: 2; // Number of mobile (portrait) columns
 
 
 
@@ -138,7 +131,7 @@
 @container-width-mobile-portrait: unit( ( @breakpoint-mobile-portrait - 40 ), px );
 
 // Convert breakpoints to pixels
-@enterpoint-widescreen: unit( ( ( @column-width-widescreen * @columns ) + ( @gutter-width * @columns ) + 260 ), px );
+@enterpoint-widescreen: unit( ( ( @column-width-widescreen * @columns ) + ( @gutter-width * @columns ) + 100 ), px );
 @enterpoint-tablet: unit( @breakpoint-tablet, px );
 @enterpoint-mobile-landscape: unit( @breakpoint-mobile-landscape, px );
 @enterpoint-mobile-portrait: unit( @breakpoint-mobile-portrait, px );
@@ -166,10 +159,10 @@
 
 // Media Query Variables
 @widescreen: ~"screen and (min-width: @{enterpoint-widescreen})";
+@under-tablet: ~"screen and (max-width: @{exitpoint-desktop})";
 @tablet: ~"screen and (min-width: @{enterpoint-tablet}) and (max-width: @{exitpoint-desktop})";
 @mobile: ~"screen and (max-width: @{exitpoint-tablet})";
 @mobile-landscape: ~"screen and (min-width: @{enterpoint-mobile-landscape}) and (max-width: @{exitpoint-tablet})";
-
 
 
 .border-box() {
@@ -195,9 +188,10 @@
 			display: inline; 
 			padding-left: @gutter-left; 
 			padding-right: @gutter-right; 
-			
-			.border-box(); 
 
+			.border-box(); 
+			
+			&.nest, 
 			&.nested {
 				padding-left: 0;
 				padding-right: 0; 
@@ -334,7 +328,7 @@
 	// Tablet specific
 	.loopTabletOffsetOverride(@index) when ( @index =< @columns - 1 ) {
 		
-		.offset-tablet-@{index} {
+		.tablet-offset-@{index} {
 			margin-left: unit( ( (@column-width-tablet * @index) + ( @gutter-width * @index ) ) ,px );
 		}
 
@@ -353,7 +347,7 @@
 		.loopTablet(1); 
 		.loopTabletOverride(1); 
 		.loopTabletOffset(1);
-		.loopTabletOffsetOverride(1);
+		.loopTabletOffsetOverride(0);
 	} // @media @tablet
 
 } // .tablet()
@@ -457,3 +451,59 @@
 .tablet(); 
 .mobile(); 
 .mobileLandscape(); 
+
+
+
+
+
+/* #Clearing
+================================================== */
+
+/* Self Clearing Goodness */
+.container:after { 
+	content: "\0020"; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden; 
+}
+
+/* Use clearfix class on parent to clear nested columns,
+or wrap each row of columns in a <div class="row"> */
+.clearfix:before,
+.clearfix:after,
+.row:before,
+.row:after {
+	content: '\0020';
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0; 
+}
+.row:after,
+.clearfix:after {
+	clear: both; 
+}
+.row,
+.clearfix {
+	zoom: 1; 
+}
+
+/* You can also use a <br class="clear" /> to clear columns */
+.clear {
+	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+
+.rounded (@radius: 4px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
